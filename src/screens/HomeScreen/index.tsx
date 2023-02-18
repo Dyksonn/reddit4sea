@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { View, FlatList } from "react-native";
+import { useNavigation } from "@react-navigation/native";
 
 import { FabButton } from "@components/FabButton";
 import { styles } from "./styles";
@@ -19,6 +20,7 @@ type PropsSubReddits = {
         num_comments: number;
         created_utc: string;
         url: string;
+        url_overridden_by_dest: string;
       }
     }[]
   }
@@ -34,17 +36,19 @@ type PropsReddits = {
     num_comments: number;
     created_utc: string;
     url: string;
+    url_overridden_by_dest: string;
   }
 }[]
 
 export const HomeScreen = () => {
+  const { navigate } = useNavigation();
   const [subreddits, setSubreddits] = useState<PropsReddits>();
   const [filter, setFilter] = useState<"new"|"top"|"popular"|"hot">("new")
 
   useEffect(() => {
     async function subreddits() {
-      const response = await api.get<PropsSubReddits>(filter+".json"+"?count=1");
-      console.log(response.data.data.children[0])
+      const response = await api.get<PropsSubReddits>(filter+".json"+"?count=1&after=true");
+      // console.log("aqui ",response.data.data.children[1].data.body_html)
       const { children } = response.data.data;
       setSubreddits(children);
     }
@@ -63,7 +67,8 @@ export const HomeScreen = () => {
         renderItem={({ item: { data } }) => 
         <Posts 
           post={data} 
-          onPress={() => alert(data.subreddit_id)}
+          onPress={() => navigate("DetailsScreen", 
+          {url: data.url_overridden_by_dest})}
         />}
         ItemSeparatorComponent={Separator}
       />

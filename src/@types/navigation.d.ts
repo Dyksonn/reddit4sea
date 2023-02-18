@@ -3,6 +3,7 @@ export declare global {
     interface RootParamList {
       LoadingScreen: undefined;
       HomeScreen: undefined;
+      DetailsScreen: { url: string };
     }
   }
 }
