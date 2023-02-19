@@ -24,7 +24,7 @@ export const LoadingScreen = () => {
       <LottieView 
         source={loading}
         style={styles.animation}
-        loop={true}
+        loop={false}
         duration={2000}
         autoPlay
         onAnimationFinish={handleToScreenHome}

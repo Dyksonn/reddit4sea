@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { View, FlatList } from "react-native";
 import { useNavigation } from "@react-navigation/native";
+import moment from  "moment";
 
 import { FabButton } from "@components/FabButton";
 import { styles } from "./styles";
@@ -18,7 +19,7 @@ type PropsSubReddits = {
         author: string;
         title: string;
         num_comments: number;
-        created_utc: string;
+        created_utc: number;
         url: string;
         url_overridden_by_dest: string;
       }
@@ -34,7 +35,7 @@ type PropsReddits = {
     author: string;
     title: string;
     num_comments: number;
-    created_utc: string;
+    created_utc: number;
     url: string;
     url_overridden_by_dest: string;
   }
@@ -48,7 +49,7 @@ export const HomeScreen = () => {
   useEffect(() => {
     async function subreddits() {
       const response = await api.get<PropsSubReddits>(filter+".json"+"?count=1&after=true");
-      // console.log("aqui ",response.data.data.children[1].data.body_html)
+      console.log("aqui ", moment.unix(response.data.data.children[1].data.created_utc))
       const { children } = response.data.data;
       setSubreddits(children);
     }

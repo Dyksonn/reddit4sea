@@ -18,7 +18,7 @@ type PropsPosts  = TouchableNativeFeedbackProps & {
     author: string;
     title: string;
     num_comments: number;
-    created_utc: string;
+    created_utc: number;
     url: string;
   }
 }
@@ -27,6 +27,7 @@ export const Posts:FC<PropsPosts> = ({
   post,
   ...rest
 }) => {
+  let data = moment.unix(post.created_utc)
   return (
     <TouchableWithoutFeedback {...rest}>
       <View style={styles.container}>
@@ -42,7 +43,7 @@ export const Posts:FC<PropsPosts> = ({
         <View style={styles.content}>
           <View style={styles.containerTimer}>
             <Text style={styles.timer}>
-              {moment.utc(post.created_utc).local().startOf('seconds').fromNow()}
+              {moment.utc(data).local().startOf('seconds').fromNow()}
             </Text>
           </View>
           <Text style={styles.title}>{post.title}</Text>
