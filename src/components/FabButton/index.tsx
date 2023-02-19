@@ -13,6 +13,8 @@ import {
 } from "@expo/vector-icons";
 
 import { styles } from "./styles";
+import { useReduxSelector } from "@hooks";
+import { selectFilter } from "@slices/subreddits/selectores";
 
 type Props = {
   style: StyleSheetProperties | {};
@@ -31,6 +33,8 @@ export const FabButton:FC<Props> = ({
   onTrophy,
   onNew
 }) => {
+  const filter = useReduxSelector(selectFilter)
+
   const [animation] = useState(new Animated.Value(0))
 
   const toggleMenu = () => {
@@ -101,7 +105,7 @@ export const FabButton:FC<Props> = ({
           outputRange: [0, -70]
         })
       }
-    ]
+    ],
   }
 
   return (
@@ -110,7 +114,12 @@ export const FabButton:FC<Props> = ({
         onFire()
         toggleMenu()
       }}>
-        <Animated.View style={[styles.button, styles.submenu, fireStyle]}>
+        <Animated.View style={[
+          styles.button, 
+          styles.submenu, 
+          fireStyle, 
+          filter === "hot" && styles.buttonSelected
+        ]}>
           <Fontisto 
             name="fire"
             size={20}
@@ -123,7 +132,12 @@ export const FabButton:FC<Props> = ({
         onTrophy()
         toggleMenu()
       }}>
-        <Animated.View style={[styles.button, styles.submenu, trophyStyle]}>
+        <Animated.View style={[
+          styles.button, 
+          styles.submenu, 
+          trophyStyle,
+          filter === "controversial" && styles.buttonSelected
+        ]}>
           <EvilIcons 
             name="trophy"
             size={20}
@@ -136,7 +150,12 @@ export const FabButton:FC<Props> = ({
         onStart()
         toggleMenu()
       }}>
-        <Animated.View style={[styles.button, styles.submenu, starStyle]}>
+        <Animated.View style={[
+          styles.button, 
+          styles.submenu, 
+          starStyle,
+          filter === "top" && styles.buttonSelected
+        ]}>
           <EvilIcons 
             name="star"
             size={20}
@@ -149,7 +168,12 @@ export const FabButton:FC<Props> = ({
         onNew()
         toggleMenu()
       }}>
-        <Animated.View style={[styles.button, styles.submenu, newStyle]}>
+        <Animated.View style={[
+          styles.button, 
+          styles.submenu, 
+          newStyle,
+          filter === "new" && styles.buttonSelected
+        ]}>
           <Foundation 
             name="burst-new"
             size={20}

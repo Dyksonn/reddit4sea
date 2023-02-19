@@ -10,7 +10,10 @@ module.exports = function(api) {
           '@assets': './src/assets',
           '@components': './src/components',
           '@service': './src/service',
-          '@store': './src/store'
+          '@store': './src/store',
+          '@slices': './src/store/slices',
+          '@hooks': './src/hooks',
+          '@routes': './src/routes'
         }
       }]
     ]

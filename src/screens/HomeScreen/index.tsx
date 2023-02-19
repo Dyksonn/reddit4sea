@@ -1,85 +1,86 @@
-import { useEffect, useState } from "react";
-import { View, FlatList } from "react-native";
+import { useEffect } from "react";
+import { View, FlatList, RefreshControl } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import moment from  "moment";
 
-import { FabButton } from "@components/FabButton";
 import { styles } from "./styles";
 import api from "@service";
+import { FabButton } from "@components/FabButton";
 import { Posts } from "@components/Posts";
 import { Separator } from "@components/Separator";
-
-type PropsSubReddits = {
-  data: {
-    children: {
-      data: {
-        id: string;
-        subreddit_id: string;
-        score: number;
-        author: string;
-        title: string;
-        num_comments: number;
-        created_utc: number;
-        url: string;
-        url_overridden_by_dest: string;
-      }
-    }[]
-  }
-}
-
-type PropsReddits = {
-  data: {
-    id: string;
-    subreddit_id: string;
-    score: number;
-    author: string;
-    title: string;
-    num_comments: number;
-    created_utc: number;
-    url: string;
-    url_overridden_by_dest: string;
-  }
-}[]
+import { useReduxDispatch, useReduxSelector } from "@hooks";
+import { 
+  selectRefreshing, 
+  selectFilter, 
+  selectListSubreddits 
+} from "@slices/subreddits/selectores";
+import { 
+  onRefreshing, 
+  onSubredditslist,
+  onFilter
+} from "@slices/subreddits";
 
 export const HomeScreen = () => {
   const { navigate } = useNavigation();
-  const [subreddits, setSubreddits] = useState<PropsReddits>();
-  const [filter, setFilter] = useState<"new"|"top"|"popular"|"hot">("new")
+
+  const refreshing = useReduxSelector(selectRefreshing);
+  const filter = useReduxSelector(selectFilter);
+  const listSubreddits = useReduxSelector(selectListSubreddits);
+
+  const dispatch = useReduxDispatch();
+
+  async function Apisubreddits() {
+    const response = await api.get<PropsSubReddits>(filter+".json");
+    const { children } = response.data.data;
+
+    dispatch(onSubredditslist({data: { children }}));
+  }
+
+  const onRefresh = async () => {
+    dispatch(onRefreshing({refreshing: true}));
+
+    await Apisubreddits();
+
+    dispatch(onRefreshing({refreshing: false}));
+  }
+
+  const handleSelectedFilter = (filter: PropsSelectFilter) => {
+    dispatch(onFilter(filter));
+  }
 
   useEffect(() => {
-    async function subreddits() {
-      const response = await api.get<PropsSubReddits>(filter+".json"+"?count=1&after=true");
-      console.log("aqui ", moment.unix(response.data.data.children[1].data.created_utc))
-      const { children } = response.data.data;
-      setSubreddits(children);
-    }
-
-    subreddits();
+    Apisubreddits();
   }, [filter]);
 
 
   return (
     <View style={styles.container}>
       <FlatList 
+        refreshControl={<RefreshControl 
+          onRefresh={onRefresh}
+          refreshing={refreshing}
+          colors={["#FFFF"]}
+          tintColor="#FFFF"
+        />}
         style={styles.flatlist}
+        initialNumToRender={7}
         contentContainerStyle={styles.contentflatlist}
-        data={subreddits}
+        data={listSubreddits}
         keyExtractor={item => String(item.data.id)}
         renderItem={({ item: { data } }) => 
         <Posts 
           post={data} 
           onPress={() => navigate("DetailsScreen", 
-          {url: data.url_overridden_by_dest})}
+          {url: data.permalink})}
         />}
         ItemSeparatorComponent={Separator}
       />
       
       <FabButton 
         style={styles.fabbuton}
-        onFire={() => setFilter("hot")}
-        onStart={() => setFilter("top")}
-        onTrophy={() => setFilter("popular")}
-        onNew={() => setFilter("new")}
+        onFire={() => handleSelectedFilter("hot")}
+        onStart={() => handleSelectedFilter("top")}
+        onTrophy={() => handleSelectedFilter("controversial")}
+        onNew={() => handleSelectedFilter("new")}
       />
     </View>
   );

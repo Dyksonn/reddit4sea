@@ -18,7 +18,7 @@ export const styles = StyleSheet.create({
     shadowOffset: {
       height: 10,
       width: 0
-    }
+    },
   },
   menu: {
     backgroundColor: "#152238"
@@ -28,5 +28,9 @@ export const styles = StyleSheet.create({
     height: 48,
     borderRadius: 48 / 2,
     backgroundColor: "#152238"
+  },
+  buttonSelected: {
+    borderWidth: 1,
+    borderColor: "#ffff"
   }
 })

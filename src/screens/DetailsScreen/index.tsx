@@ -13,7 +13,7 @@ export const DetailsScreen = () => {
       <WebView 
         style={{flex: 1}}
         source={{
-          uri: route.url
+          uri: "https://www.reddit.com"+route.url
         }}
       />
     </View>

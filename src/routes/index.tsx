@@ -5,9 +5,13 @@ import { LoadingScreen } from "@screens/LoadingScreen";
 import { HomeScreen } from "@screens/HomeScreen";
 import { DetailsScreen } from "@screens/DetailsScreen";
 
+import { useReduxSelector } from "@hooks";
+import { selectFilter } from "@slices/subreddits/selectores";
+
 const { Navigator, Screen } = createNativeStackNavigator();
 
 export default function Routes() {
+  const filter = useReduxSelector(selectFilter)
   return (
     <NavigationContainer>
       <Navigator 
@@ -27,7 +31,7 @@ export default function Routes() {
           component={HomeScreen} 
           options={{
             headerShown: true,
-            title: "Reddit programing",
+            title: "Reddit programing/"+filter,
           }}
         />
 

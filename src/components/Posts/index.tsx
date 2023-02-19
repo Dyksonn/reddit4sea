@@ -11,16 +11,7 @@ import moment from "moment";
 import { styles } from "./styles";
 
 type PropsPosts  = TouchableNativeFeedbackProps & {
-  post: {
-    id: string;
-    subreddit_id: string;
-    score: number;
-    author: string;
-    title: string;
-    num_comments: number;
-    created_utc: number;
-    url: string;
-  }
+  post: PropsReddits;
 }
 
 export const Posts:FC<PropsPosts> = ({
