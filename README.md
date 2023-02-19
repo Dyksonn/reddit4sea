@@ -43,7 +43,7 @@ O layout da aplicação foi desenvolvido por mim mesmo
 
 ### Visão App Reddit4sea
 
-<img src="./public/img/001.png"/>
+<img src="./public/img/app1.png"/>
 
 ### Home - Reddit4sea
 
