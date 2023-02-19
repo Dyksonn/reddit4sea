@@ -2,7 +2,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 type PropsState = {
     refreshing: boolean;
-    subreddits: PropsSubReddits;
+    subreddits: PropsChildrenReddits;
     filters: PropsSelectFilter
 }
 
@@ -11,6 +11,7 @@ const subredditsSlice = createSlice({
     initialState: {
         refreshing: false,
         filters: "new",
+        subreddits: []
     } as PropsState,
     reducers: {
         onRefreshing: (draft, action: PayloadAction<{ refreshing: boolean }>) => {
@@ -20,7 +21,7 @@ const subredditsSlice = createSlice({
             draft.filters = action.payload;
         },
         onSubredditslist: (draft, action: PayloadAction<PropsSubReddits>) => {
-            draft.subreddits.data.children = action.payload.data.children;
+            draft.subreddits = action.payload.data.children;
         }
     }
 });

@@ -18,4 +18,8 @@ type PropsSubReddits = {
     }
 }
 
+type PropsChildrenReddits = {
+  data: PropsReddits
+}[]
+
 type PropsSelectFilter = "new"|"top"|"controversial"|"hot";

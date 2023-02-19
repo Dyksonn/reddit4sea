@@ -1,3 +1,4 @@
+import { Platform } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
@@ -15,7 +16,12 @@ export default function Routes() {
   return (
     <NavigationContainer>
       <Navigator 
-        initialRouteName="LoadingScreen"
+        initialRouteName={
+          Platform.select({
+            android: "HomeScreen",
+            ios: "LoadingScreen"
+          })
+        }
         screenOptions={{
           headerShown: false,
           headerStyle: {
